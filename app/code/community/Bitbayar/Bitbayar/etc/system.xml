@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<config>
+   <sections>
+		<!-- payment tab -->
+        <payment>
+            <groups>
+				<!-- payment fieldset -->
+                <Bitbayar translate="label" module="paygate">
+                    <label>BitBayar</label>
+					<!-- position between other payment methods -->
+                    <sort_order>670</sort_order>
+					<!-- do not show this configuration options in store scope -->
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <comment><![CDATA[<b>Setup Instructions:</b><br><ol><li>Go to <a href="https://bitbayar.com/setting">https://bitbayar.com/setting</a> to get you API Token for this plugin.</b><li></ol>]]></comment>
+                    <fields>
+						<!-- is this payment method active for the website? -->
+                        <active translate="label">
+							<!-- label for the field -->
+                            <label>Enabled</label>
+							<!-- input type for configuration value -->
+                            <frontend_type>select</frontend_type>
+							<!-- model to take the option values from -->
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+							<!-- field position -->
+                            <sort_order>0</sort_order>
+							<!-- do not show this field in store scope -->
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+                        
+                        <title translate="label">
+							<label>Title</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</title>
+						
+						<api_token translate="label">
+							<label>API Token</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</api_token>
+						
+						<sort_order translate="label">
+							<label>Sort Order</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment>Customize the order of the BitBayar plugin relative to other payment plugins.</comment>
+						</sort_order>
+						
+						<custom_success_url translate="label">
+							<label>Custom success URL</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>4</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</custom_success_url>
+
+						<custom_cancel_url translate="label">
+							<label>Custom cancel URL</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment>Optional - use these settings to override the default success and cancel URLs if you are using a custom checkout module. Most users should not have to change these settings.</comment>
+						</custom_cancel_url>
+                    </fields>
+                </Bitbayar>
+            </groups>
+        </payment>
+    </sections>
+</config>

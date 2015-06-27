@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<config>
+<modules>
+	<Bitbayar_Bitbayar>
+		<version>0.1.0</version>
+	</Bitbayar_Bitbayar>
+</modules>
+
+<frontend>
+	<routers>
+		<bitbayar>
+		<use>standard</use>
+			<args>
+				<module>Bitbayar_Bitbayar</module>
+				<frontName>bitbayar</frontName>
+			</args>
+		</bitbayar>
+	</routers>
+</frontend>
+
+<global>
+	<blocks>
+		<Bitbayar>
+			<class>Bitbayar_Bitbayar_Block</class>
+		</Bitbayar>
+	</blocks>
+
+	<models>
+		<Bitbayar>
+			<class>Bitbayar_Bitbayar_Model</class>
+		</Bitbayar>
+	</models>
+	
+	<resources>
+		<Bitbayar_setup>
+			<setup>
+				<module>Bitbayar_Bitbayar</module>
+			</setup>
+			<connection>
+				<use>core_setup</use>
+			</connection>
+		</Bitbayar_setup>
+		
+		<Bitbayar_write>
+			<connection>
+				<use>core_write</use>
+			</connection>
+		</Bitbayar_write>
+		
+		<Bitbayar_read>
+			<connection>
+				<use>core_read</use>
+			</connection>
+		</Bitbayar_read>
+	</resources>
+</global>
+
+	<default>
+		<payment>
+			<Bitbayar>
+				<active>1</active>
+				<model>Bitbayar/paymentMethod</model>
+				<title>Pay Bitcoin via BitBayar</title>
+				<payment_action>authorize</payment_action>
+				<callback_secret>generate</callback_secret>
+			</Bitbayar>
+		</payment>
+	</default>
+</config>
