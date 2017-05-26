@@ -1,62 +1,62 @@
 <?php
- 
+
 class Bitbayar_Bitbayar_Model_PaymentMethod extends Mage_Payment_Model_Method_Abstract
 {
-    protected $_code = 'Bitbayar';
- 
-    /**
-     * Is this payment method a gateway (online auth/charge) ?
-     */
-    protected $_isGateway               = true;
- 
-    /**
-     * Can authorize online?
-     */
-    protected $_canAuthorize            = true;
- 
-    /**
-     * Can capture funds online?
-     */
-    protected $_canCapture              = false;
- 
-    /**
-     * Can capture partial amounts online?
-     */
-    protected $_canCapturePartial       = false;
- 
-    /**
-     * Can refund online?
-     */
-    protected $_canRefund               = false;
- 
-    /**
-     * Can void transactions online?
-     */
-    protected $_canVoid                 = false;
- 
-    /**
-     * Can use this payment method in administration panel?
-     */
-    protected $_canUseInternal          = true;
- 
-    /**
-     * Can show this payment method as an option on checkout payment page?
-     */
-    protected $_canUseCheckout          = true;
- 
-    /**
-     * Is this payment method suitable for multi-shipping checkout?
-     */
-    protected $_canUseForMultishipping  = true;
- 
-    /**
-     * Can save credit card information for future processing?
-     */
-    protected $_canSaveCc = false;
-  
-  
-    public function authorize(Varien_Object $payment, $amount) 
-    {
+	protected $_code = 'Bitbayar';
+
+	/**
+	 * Is this payment method a gateway (online auth/charge) ?
+	 */
+	protected $_isGateway = true;
+
+	/**
+	 * Can authorize online?
+	 */
+	protected $_canAuthorize = true;
+
+	/**
+	 * Can capture funds online?
+	 */
+	protected $_canCapture = false;
+
+	/**
+	 * Can capture partial amounts online?
+	 */
+	protected $_canCapturePartial = false;
+
+	/**
+	 * Can refund online?
+	 */
+	protected $_canRefund = false;
+
+	/**
+	 * Can void transactions online?
+	 */
+	protected $_canVoid = false;
+
+	/**
+	 * Can use this payment method in administration panel?
+	 */
+	protected $_canUseInternal = true;
+
+	/**
+	 * Can show this payment method as an option on checkout payment page?
+	 */
+	protected $_canUseCheckout = true;
+
+	/**
+	 * Is this payment method suitable for multi-shipping checkout?
+	 */
+	protected $_canUseForMultishipping = true;
+
+	/**
+	 * Can save credit card information for future processing?
+	 */
+	protected $_canSaveCc = false;
+
+
+	public function authorize(Varien_Object $payment, $amount) 
+	{
 		$apiToken = Mage::getStoreConfig('payment/Bitbayar/api_token');
 		$bitbayar_currency = 'IDR';
 
@@ -68,7 +68,6 @@ class Bitbayar_Bitbayar_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 			throw new Exception("API Token is not valid!");
 		}
 
-
 		$baseCurrencyCode = Mage::app()->getBaseCurrencyCode();
 		$allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
 		$currencyRates = Mage::getModel('directory/currency')->getCurrencyRates($baseCurrencyCode, array_values($allowedCurrencies));
@@ -78,15 +77,6 @@ class Bitbayar_Bitbayar_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 		}else{
 			$curr_rate = 1;
 		}
-		//~ $data_currency = array(
-			//~ 'baseCurrencyCode' => $baseCurrencyCode,
-			//~ 'allowedCurrencies' => $allowedCurrencies,
-			//~ 'currencyRates' => $currencyRates,
-			//~ 'IDRRates' => $currencyRates['IDR'],
-			//~ 
-		//~ );
-		//~ print_r($data_currency);
-
 
 		$order = $payment->getOrder();
 		$currency = $order->getBaseCurrencyCode();
@@ -99,14 +89,13 @@ class Bitbayar_Bitbayar_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 		if ($cancelUrl == false) {
 			$cancelUrl = Mage::getUrl('bitbayar'). 'redirect/cancel/';
 		}
-		
+
 		$bitbayar_url = 'https://bitbayar.com/api/create_invoice';
-		
+
 		$dataPost=array(
 			'token'=>$apiToken,
 			'invoice_id'=>$order['increment_id'],
 			'rupiah'=>round($amount*$curr_rate),
-			//~ 'rupiah'=>900,
 			'memo'=>'Invoice #'.$order['increment_id'].' - Magento',
 			'callback_url'=>Mage::getUrl('bitbayar'). 'callback/callback',
 			'url_success'=>$successUrl,
@@ -115,23 +104,23 @@ class Bitbayar_Bitbayar_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 
 		$bb_pay = $this->curlPost($bitbayar_url, $dataPost);
 		$result = json_decode($bb_pay);
-	
+
 		if($result->success){
 			$redirectUrl = $result->payment_url;
 		}
-		
+
 		//~ Redirect customer to payment page
 		$payment->setIsTransactionPending(true); // Set status to Payment Review while waiting for Bitbayar postback
 		Mage::getSingleton('customer/session')->setRedirectUrl($redirectUrl);
 		return $this;
-    }
+	}
 
-    
-    public function getOrderPlaceRedirectUrl()
-    {
-      return Mage::getSingleton('customer/session')->getRedirectUrl();
-    }
-    
+
+	public function getOrderPlaceRedirectUrl()
+	{
+		return Mage::getSingleton('customer/session')->getRedirectUrl();
+	}
+
 	public function curlPost($url, $data) 
 	{
 		if(empty($url) OR empty($data))

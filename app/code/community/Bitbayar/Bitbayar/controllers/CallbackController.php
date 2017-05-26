@@ -7,7 +7,7 @@ class Bitbayar_Bitbayar_CallbackController extends Mage_Core_Controller_Front_Ac
 
 		$bitbayar_url_check = 'https://bitbayar.com/api/check_invoice';
 		$apiToken = Mage::getStoreConfig('payment/Bitbayar/api_token');
-		
+
 		// Get callback data
 		$id_order = (int)$_POST['invoice_id'];
 		$id_bitbayar = $_POST['id'];
@@ -25,14 +25,11 @@ class Bitbayar_Bitbayar_CallbackController extends Mage_Core_Controller_Front_Ac
 		$result = json_decode($check_status);
 		$status = $result->status;
 
-		print_r($status);
-
 		// Update the order to notifiy that it has been paid
 		if ($status === 'paid') {
 
 			$payment = \Mage::getModel('sales/order_payment')->setOrder($order);
 
-		 
 				$payment->registerCaptureNotification($total_paid);
 				$order->addPayment($payment);
 
@@ -43,10 +40,9 @@ class Bitbayar_Bitbayar_CallbackController extends Mage_Core_Controller_Front_Ac
 				}
 
 				$order->save();
-				
 		}else {
-				\Mage::throwException('Could not create a payment object in the BitBayar Callback controller.');
-			}
+			\Mage::throwException('Could not create a payment object in the BitBayar Callback controller.');
+		}
 	}
 
 	public function curlPost($url, $data) 
